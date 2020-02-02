@@ -241,8 +241,7 @@ void Item::OnLeftClick(bool up, int x, int y, bool* block) {
 
 void __fastcall Item::ItemNamePatch(wchar_t *name, UnitAny *item)
 {
-	char* szName = UnicodeToAnsi(name);
-	string itemName = szName;
+    string itemName = wstring_to_string(wstring(name));
 	char* code = D2COMMON_GetItemText(item->dwTxtFileNo)->szCode;
 
 	if (Toggles["Advanced Item Display"].state) {
@@ -260,25 +259,25 @@ void __fastcall Item::ItemNamePatch(wchar_t *name, UnitAny *item)
 	}
 
 	// Some common color codes for text strings (see TextColor enum):
-	// ÿc; (purple)
-	// ÿc0 (white)
-	// ÿc1 (red)
-	// ÿc2 (green)
-	// ÿc3 (blue)
-	// ÿc4 (gold)
-	// ÿc5 (gray)
-	// ÿc6 (black)
-	// ÿc7 (tan)
-	// ÿc8 (orange)
-	// ÿc9 (yellow)
+	// Ã¿c; (purple)
+	// Ã¿c0 (white)
+	// Ã¿c1 (red)
+	// Ã¿c2 (green)
+	// Ã¿c3 (blue)
+	// Ã¿c4 (gold)
+	// Ã¿c5 (gray)
+	// Ã¿c6 (black)
+	// Ã¿c7 (tan)
+	// Ã¿c8 (orange)
+	// Ã¿c9 (yellow)
 
 	/* Test code to display item codes */
 	//string test3 = test_code;
 	//itemName += " {" + test3 + "}";
 
-	MultiByteToWideChar(CODE_PAGE, MB_PRECOMPOSED, itemName.c_str(), itemName.length(), name, itemName.length());
-	name[itemName.length()] = 0;  // null-terminate the string since MultiByteToWideChar doesn't
-	delete[] szName;
+    auto patchedName = string_to_wstring(itemName);
+    wcsncpy(name, patchedName.c_str(), patchedName.size());
+    name[itemName.size()] = 0;  // null-terminate the string since wcsncpy doesn't
 }
 
 void Item::OrigGetItemName(UnitAny *item, string &itemName, char *code)
@@ -289,12 +288,12 @@ void Item::OrigGetItemName(UnitAny *item, string &itemName, char *code)
 		// We will also strip ilvls from these items
 		if (code[0] == 't' && code[1] == 's' && code[2] == 'c')  // town portal scroll
 		{
-			itemName = "ÿc2**ÿc0TP";
+			itemName = "Ã¿c2**Ã¿c0TP";
 			displayItemLevel = false;
 		}
 		else if (code[0] == 'i' && code[1] == 's' && code[2] == 'c')  // identify scroll
 		{
-			itemName = "ÿc2**ÿc0ID";
+			itemName = "Ã¿c2**Ã¿c0ID";
 			displayItemLevel = false;
 		}
 		else if (code[0] == 'v' && code[1] == 'p' && code[2] == 's')  // stamina potion
@@ -346,27 +345,27 @@ void Item::OrigGetItemName(UnitAny *item, string &itemName, char *code)
 		{
 			if (code[2] == '1')
 			{
-				itemName = "ÿc1**ÿc0Min Heal";
+				itemName = "Ã¿c1**Ã¿c0Min Heal";
 				displayItemLevel = false;
 			}
 			else if (code[2] == '2')
 			{
-				itemName = "ÿc1**ÿc0Lt Heal";
+				itemName = "Ã¿c1**Ã¿c0Lt Heal";
 				displayItemLevel = false;
 			}
 			else if (code[2] == '3')
 			{
-				itemName = "ÿc1**ÿc0Heal";
+				itemName = "Ã¿c1**Ã¿c0Heal";
 				displayItemLevel = false;
 			}
 			else if (code[2] == '4')
 			{
-				itemName = "ÿc1**ÿc0Gt Heal";
+				itemName = "Ã¿c1**Ã¿c0Gt Heal";
 				displayItemLevel = false;
 			}
 			else if (code[2] == '5')
 			{
-				itemName = "ÿc1**ÿc0Sup Heal";
+				itemName = "Ã¿c1**Ã¿c0Sup Heal";
 				displayItemLevel = false;
 			}
 		}
@@ -374,27 +373,27 @@ void Item::OrigGetItemName(UnitAny *item, string &itemName, char *code)
 		{
 			if (code[2] == '1')
 			{
-				itemName = "ÿc3**ÿc0Min Mana";
+				itemName = "Ã¿c3**Ã¿c0Min Mana";
 				displayItemLevel = false;
 			}
 			else if (code[2] == '2')
 			{
-				itemName = "ÿc3**ÿc0Lt Mana";
+				itemName = "Ã¿c3**Ã¿c0Lt Mana";
 				displayItemLevel = false;
 			}
 			else if (code[2] == '3')
 			{
-				itemName = "ÿc3**ÿc0Mana";
+				itemName = "Ã¿c3**Ã¿c0Mana";
 				displayItemLevel = false;
 			}
 			else if (code[2] == '4')
 			{
-				itemName = "ÿc3**ÿc0Gt Mana";
+				itemName = "Ã¿c3**Ã¿c0Gt Mana";
 				displayItemLevel = false;
 			}
 			else if (code[2] == '5')
 			{
-				itemName = "ÿc3**ÿc0Sup Mana";
+				itemName = "Ã¿c3**Ã¿c0Sup Mana";
 				displayItemLevel = false;
 			}
 		}
@@ -402,12 +401,12 @@ void Item::OrigGetItemName(UnitAny *item, string &itemName, char *code)
 		{
 			if (code[2] == 's')
 			{
-				itemName = "ÿc;**ÿc0Rejuv";
+				itemName = "Ã¿c;**Ã¿c0Rejuv";
 				displayItemLevel = false;
 			}
 			else if (code[2] == 'l')
 			{
-				itemName = "ÿc;**ÿc0Full";
+				itemName = "Ã¿c;**Ã¿c0Full";
 				displayItemLevel = false;
 			}
 		}
@@ -503,13 +502,13 @@ void Item::OrigGetItemName(UnitAny *item, string &itemName, char *code)
 		//if( (code[0] == 'g' && code[1] == 'l'					) ||
 		//	(code[0] == 's' && code[1] == 'k' && code[2] == 'l' ) )
 		//{
-		//	itemName = "ÿc:" + itemName;
+		//	itemName = "Ã¿c:" + itemName;
 		//}
 		///*Perfect Gems*/
 		//if( (code[0] == 'g' && code[1] == 'p'                   ) ||
 		//	(code[0] == 's' && code[1] == 'k' && code[2] == 'p' ) )
 		//{
-		//	itemName = "ÿc<" + itemName;
+		//	itemName = "Ã¿c<" + itemName;
 		//}
 		/*Ethereal*/
 		if( item->pItemData->dwFlags & 0x400000 )
@@ -518,7 +517,7 @@ void Item::OrigGetItemName(UnitAny *item, string &itemName, char *code)
 			if( (code[0] == 'u'                                    ) ||
 				(code[0] == 'p' && code[1] == 'a' && code[2] >= 'b') )
 			{
-				itemName = "ÿc;" + itemName;
+				itemName = "Ã¿c;" + itemName;
 			}
 		}
 		/*Runes*/
@@ -526,33 +525,33 @@ void Item::OrigGetItemName(UnitAny *item, string &itemName, char *code)
 		{
 			if( code[1] == '0' )
 			{
-				itemName = "ÿc0" + itemName;
+				itemName = "Ã¿c0" + itemName;
 			}
 			else if( code[1] == '1' )
 			{
 				if( code[2] <= '6')
 				{
-					itemName = "ÿc4" + itemName;
+					itemName = "Ã¿c4" + itemName;
 				}
 				else
 				{
-					itemName = "ÿc8" + itemName;
+					itemName = "Ã¿c8" + itemName;
 				}
 			}
 			else if( code[1] == '2' )
 			{
 				if( code[2] <= '2' )
 				{
-					itemName = "ÿc8" + itemName;
+					itemName = "Ã¿c8" + itemName;
 				}
 				else
 				{
-					itemName = "ÿc1" + itemName;
+					itemName = "Ã¿c1" + itemName;
 				}
 			}
 			else if( code[1] == '3' )
 			{
-				itemName = "ÿc1" + itemName;
+				itemName = "Ã¿c1" + itemName;
 			}
 		}
 	}
