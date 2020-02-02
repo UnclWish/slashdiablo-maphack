@@ -46,6 +46,7 @@
 #include <string>
 #include <vector>
 #include <Windows.h>
+#include <codecvt>
 #include "BH.h"
 #include "Common.h"
 #include <memory>
@@ -69,6 +70,16 @@ void Tokenize(const string& str,
         // Find next "non-delimiter"
         pos = str.find_first_of(delimiters, lastPos);
     }
+}
+
+wstring string_to_wstring(const string& str) {
+    wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
+    return converter.from_bytes(str);
+}
+
+string wstring_to_string(const wstring& wstr) {
+    wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
+    return converter.to_bytes(wstr);
 }
 
 wchar_t* AnsiToUnicode(const char* str)
